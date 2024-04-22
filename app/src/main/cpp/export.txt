@@ -1,0 +1,13 @@
+{
+global:
+Java_com_example_shared_1storage_MainActivity_sstCreate;
+Java_com_example_shared_1storage_MainActivity_sstSet;
+Java_com_example_shared_1storage_MainActivity_sstGet;
+Java_com_example_shared_1storage_MainActivity_sstClose;
+JNI_OnLoad;
+_init;
+_fini;
+
+local:
+*;
+};

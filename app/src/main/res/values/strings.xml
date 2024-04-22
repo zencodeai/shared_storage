@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">shared_storage</string>
+    <string name="button1">Create</string>
+    <string name="button2">Set</string>
+    <string name="button3">Get</string>
+    <string name="button4">Close</string>
+    <string name="log_textbox_hint">Log appears here</string>
+</resources>
