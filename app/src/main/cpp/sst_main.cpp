@@ -11,10 +11,10 @@
 #define LOG_ENABLED
 
 #ifdef LOG_ENABLED
-#define LOG_DEGUG(...) __android_log_print(ANDROID_LOG_DEBUG, "SST", __VA_ARGS__)
+#define LOG_DEBUG(...) __android_log_print(ANDROID_LOG_DEBUG, "SST", __VA_ARGS__)
 #define LOG_ERROR(...) __android_log_print(ANDROID_LOG_ERROR, "SST", __VA_ARGS__)
 #else
-#define LOG_DEGUG(...) do {} while(0)
+#define LOG_DEBUG(...) do {} while(0)
 #define LOG_ERROR(...) do {} while(0)
 #endif
 
@@ -64,7 +64,7 @@ private:
     void createDatabase(const char* path) {
 
         try {
-            LOG_DEGUG("Creating database: %s", path);
+            LOG_DEBUG("Creating database: %s", path);
 
             // Create database file
             int rc = sqlite3_open(path, &m_db);
@@ -108,7 +108,7 @@ public:
     // Close the database if it is open
     void close() {
 
-        LOG_DEGUG("Closing database");
+        LOG_DEBUG("Closing database");
         if (m_db != nullptr) {
             sqlite3_close(m_db);
             m_db = nullptr;
@@ -118,7 +118,7 @@ public:
     // Open/create database
     void open(const char* path) {
 
-        LOG_DEGUG("Opening database: %s", path);
+        LOG_DEBUG("Opening database: %s", path);
 
         // Close the database if it is open
         close();
@@ -126,14 +126,14 @@ public:
         // Does database file exist?
         if (access(path, F_OK) != 0) {
 
-            LOG_DEGUG("Database file does not exist: %s", path);
+            LOG_DEBUG("Database file does not exist: %s", path);
 
             // Create the database
             createDatabase(path);
         }
         else {
 
-            LOG_DEGUG("Database file exists: %s", path);
+            LOG_DEBUG("Database file exists: %s", path);
 
             // Open the database
             int rc = sqlite3_open(path, &m_db);
@@ -148,7 +148,7 @@ public:
     // Set value
     void setValue(const char* key, const char* value) {
 
-        LOG_DEGUG("Setting value: %s=%s", key, value);
+        LOG_DEBUG("Setting value: %s=%s", key, value);
 
         // Insert or replace the key and value
         const char* sql = "INSERT OR REPLACE INTO KEYS (KEY, VALUE) VALUES (?, ?);";
@@ -196,7 +196,7 @@ public:
     // Get value
     std::string getValue(const char* key) {
 
-        LOG_DEGUG("Getting value: %s", key);
+        LOG_DEBUG("Getting value: %s", key);
 
         // Select the value
         const char* sql = "SELECT VALUE FROM KEYS WHERE KEY = ?;";
@@ -226,7 +226,7 @@ public:
 
         // Get the value
         std::string value = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
-        LOG_DEGUG("Value: %s", value.c_str());
+        LOG_DEBUG("Value: %s", value.c_str());
 
         // Finalize the statement
         rc = sqlite3_finalize(stmt);
@@ -264,8 +264,8 @@ Java_com_example_shared_1storage_MainActivity_sstCreate(JNIEnv *env, jobject thi
         CJNIString externalDataPathStr(env, externalDataPath);
 
         // Log the paths
-        LOG_DEGUG("Local data path: %s", localDataPathStr.c_str());
-        LOG_DEGUG("External data path: %s", externalDataPathStr.c_str());
+        LOG_DEBUG("Local data path: %s", localDataPathStr.c_str());
+        LOG_DEBUG("External data path: %s", externalDataPathStr.c_str());
 
         // Build the database path
         std::string dbPath = externalDataPathStr.c_str();
@@ -295,8 +295,8 @@ Java_com_example_shared_1storage_MainActivity_sstSet(JNIEnv *env, jobject thiz, 
         CJNIString valueStr(env, value);
 
         // Log the key and value
-        LOG_DEGUG("Key: %s", keyStr.c_str());
-        LOG_DEGUG("Value: %s", valueStr.c_str());
+        LOG_DEBUG("Key: %s", keyStr.c_str());
+        LOG_DEBUG("Value: %s", valueStr.c_str());
 
         // Set the value
         g_database.setValue(keyStr.c_str(), valueStr.c_str());
@@ -321,11 +321,11 @@ Java_com_example_shared_1storage_MainActivity_sstGet(JNIEnv *env, jobject thiz, 
         CJNIString keyStr(env, key);
 
         // Log the key
-        LOG_DEGUG("Key: %s", keyStr.c_str());
+        LOG_DEBUG("Key: %s", keyStr.c_str());
 
         // Get the value
         std::string value = g_database.getValue(keyStr.c_str());
-        LOG_DEGUG("Value: %s", value.c_str());
+        LOG_DEBUG("Value: %s", value.c_str());
 
         // Return the value
         jstring jvalue = env->NewStringUTF(value.c_str());
